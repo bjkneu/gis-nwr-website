@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Panel (DEBUG) - Giriş Testi</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #log { white-space: pre-wrap; background:#111; color:#0f0; padding:12px; border-radius:8px; }
+    input, button { margin: 6px 0; padding: 8px; }
+    .muted { color:#666; }
+  </style>
+</head>
+<body>
+  <h1>Admin Giriş (DEBUG)</h1>
+  <p class="muted">Bu sayfa, hatayı açıkça göstermek için hazırlandı.</p>
+  <div>
+    <input id="email" type="email" placeholder="E-posta"><br>
+    <input id="password" type="password" placeholder="Şifre"><br>
+    <button id="btnLogin">Giriş Yap</button>
+  </div>
+  <h3>Durum</h3>
+  <div id="status">Hazır</div>
+  <h3>Log</h3>
+  <div id="log"></div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCOGoE0f0gywYGrZCMcQfUE6ikf-4X7x1k",
+    authDomain: "gis-nwr-website.firebaseapp.com",
+    projectId: "gis-nwr-website",
+    storageBucket: "gis-nwr-website.appspot.com",
+    messagingSenderId: "654148719639",
+    appId: "1:654148719639:web:b7cd23a784ceff9cea3852",
+    measurementId: "G-1KMLFGBXWP"
+  };
+
+  const logEl = document.getElementById('log');
+  function log(...args){
+    console.log(...args);
+    try { logEl.textContent += args.map(a => (typeof a==='object'? JSON.stringify(a,null,2): String(a))).join(' ') + "\n"; }
+    catch(e){ logEl.textContent += args.join(' ') + "\n"; }
+  }
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  log('Sayfa yüklendi. host:', location.host, 'origin:', location.origin);
+  log('Firebase proje:', firebase.app().options.projectId);
+
+  document.getElementById('btnLogin').addEventListener('click', async () => {
+    const email = document.getElementById('email').value.trim();
+    const pass  = document.getElementById('password').value.trim();
+    document.getElementById('status').textContent = 'Giriş deneniyor...';
+    try {
+      const res = await auth.signInWithEmailAndPassword(email, pass);
+      document.getElementById('status').textContent = 'Giriş başarılı: ' + (res.user && res.user.email);
+      alert('Giriş başarılı: ' + (res.user && res.user.email));
+      log('SUCCESS', {user: res.user && {uid: res.user.uid, email: res.user.email}});
+    } catch (err){
+      const msg = (err && (err.code || err.message)) ? (err.code + ' | ' + err.message) : String(err);
+      document.getElementById('status').textContent = 'Hata: ' + msg;
+      alert('HATA: ' + msg);
+      log('ERROR', err);
+    }
+  });
+</script>
+</body>
+</html>
