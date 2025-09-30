@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel (TR & DE)</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #1e3c72, #2a5298);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .login-box {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 10px;
+      width: 350px;
+      text-align: center;
+    }
+    input, button, select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    input {
+      background: #fff;
+      color: #000;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    select {
+      background: #fff;
+      color: #000;
+    }
+    #status {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #ff8080;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2 id="title">Admin Panel</h2>
+    <select id="lang">
+      <option value="tr">Türkçe</option>
+      <option value="de">Deutsch</option>
+    </select>
+    <form id="loginForm">
+      <input id="email" type="email" placeholder="E-posta" required>
+      <input id="password" type="password" placeholder="Şifre" required>
+      <button type="submit" id="loginBtn">Giriş Yap</button>
+    </form>
+    <div id="status"></div>
+  </div>
+
+  <script>
+    // Firebase yapılandırması
+    const firebaseConfig = {
+      apiKey: "AIzaSyCOGoE0f0gywYGrZCMcQfUE6ikf-4X7x1k",
+      authDomain: "gis-nwr-website.firebaseapp.com",
+      projectId: "gis-nwr-website",
+      storageBucket: "gis-nwr-website.appspot.com",
+      messagingSenderId: "654148719639",
+      appId: "1:654148719639:web:b7cd23a784ceff9cea3852",
+      measurementId: "G-1KMLFGBXWP"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const loginForm = document.getElementById("loginForm");
+    const status = document.getElementById("status");
+    const lang = document.getElementById("lang");
+
+    // Dil desteği
+    const texts = {
+      tr: { title: "Admin Paneli", email: "E-posta", pass: "Şifre", login: "Giriş Yap", success: "Giriş başarılı!", fail: "Hata:" },
+      de: { title: "Admin Panel", email: "E-Mail", pass: "Passwort", login: "Einloggen", success: "Erfolgreich eingeloggt!", fail: "Fehler:" }
+    };
+
+    lang.addEventListener("change", () => {
+      const t = texts[lang.value];
+      document.getElementById("title").textContent = t.title;
+      document.getElementById("email").placeholder = t.email;
+      document.getElementById("password").placeholder = t.pass;
+      document.getElementById("loginBtn").textContent = t.login;
+    });
+
+    // Varsayılan dil Türkçe
+    lang.value = "tr";
+
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
+      status.textContent = "Bekleniyor...";
+
+      auth.signInWithEmailAndPassword(email, pass)
+        .then((userCred) => {
+          status.style.color = "#80ff80";
+          status.textContent = texts[lang.value].success + " " + userCred.user.email;
+          // Yönlendirme
+          setTimeout(() => {
+            window.location.href = "amin-panel.html";
+          }, 1500);
+        })
+        .catch((err) => {
+          status.style.color = "#ff8080";
+          status.textContent = texts[lang.value].fail + " " + err.message;
+        });
+    });
+  </script>
+</body>
+</html>
