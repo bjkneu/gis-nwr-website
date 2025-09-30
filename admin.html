@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Giriş</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC0GoE0f0gywYGrZCMcQfUE6ikf-4X7x1k",
+      authDomain: "gis-nwr-website.firebaseapp.com",
+      projectId: "gis-nwr-website",
+      storageBucket: "gis-nwr-website.appspot.com",
+      messagingSenderId: "654148719639",
+      appId: "1:654148719639:web:b7cd23a784ceff9cea3852",
+      measurementId: "G-1KMLFGBXWP"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.login = function(){
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          alert("Giriş başarılı!");
+          window.location.href = "admin-panel.html";
+        })
+        .catch(error => {
+          alert("Hata: " + error.message);
+        });
+    }
+  </script>
+</head>
+<body>
+  <h2>Admin Giriş</h2>
+  <input type="email" id="email" placeholder="E-posta">
+  <input type="password" id="password" placeholder="Şifre">
+  <button onclick="login()">Giriş Yap</button>
+</body>
+</html>
