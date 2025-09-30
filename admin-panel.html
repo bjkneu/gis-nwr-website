@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+    main {
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .card {
+      background: #fff;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 15px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background: #218838;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Admin Panel</h1>
+  </header>
+
+  <main>
+    <!-- Ürün ekleme -->
+    <div class="card">
+      <h2>Yeni Ürün Ekle</h2>
+      <form id="productForm">
+        <label>Ürün Adı</label>
+        <input type="text" id="productName" required>
+
+        <label>Ürün Açıklaması</label>
+        <textarea id="productDesc" rows="3"></textarea>
+
+        <label>Fiyat (₺)</label>
+        <input type="number" id="productPrice" required>
+
+        <label>Resim Yükle</label>
+        <input type="file" id="productImage" accept="image/*">
+
+        <label>PDF Yükle</label>
+        <input type="file" id="productPDF" accept="application/pdf">
+
+        <button type="submit">Kaydet</button>
+      </form>
+    </div>
+
+    <!-- Ürün listesi -->
+    <div class="card">
+      <h2>Ürün Listesi</h2>
+      <table id="productTable">
+        <thead>
+          <tr>
+            <th>Adı</th>
+            <th>Açıklama</th>
+            <th>Fiyat</th>
+            <th>Resim</th>
+            <th>PDF</th>
+            <th>İşlemler</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Ürünler buraya eklenecek -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('productForm');
+    const tableBody = document.querySelector('#productTable tbody');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('productName').value;
+      const desc = document.getElementById('productDesc').value;
+      const price = document.getElementById('productPrice').value;
+      const image = document.getElementById('productImage').files[0];
+      const pdf = document.getElementById('productPDF').files[0];
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${name}</td>
+        <td>${desc}</td>
+        <td>${price} ₺</td>
+        <td>${image ? image.name : '-'}</td>
+        <td>${pdf ? pdf.name : '-'}</td>
+        <td>
+          <button onclick="editProduct(this)">Düzenle</button>
+          <button onclick="deleteProduct(this)" style="background:#dc3545">Sil</button>
+        </td>
+      `;
+      tableBody.appendChild(row);
+
+      form.reset();
+    });
+
+    function editProduct(btn) {
+      const row = btn.parentElement.parentElement;
+      alert("Düzenleme için Firebase entegrasyonu eklenebilir.");
+    }
+
+    function deleteProduct(btn) {
+      btn.parentElement.parentElement.remove();
+    }
+  </script>
+</body>
+</html>
