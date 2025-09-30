@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kullaniciadi.github.io/gis-nwr-website/sitemap.xml
